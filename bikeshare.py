@@ -332,13 +332,17 @@ def user_stats(df, city):
 
 def main():
     while True:
+
+        # Get info for filter from user and check that info with the user
         ready = False
         while not ready:
             city, month, day = get_filters()
             ready = check_input(city, month, day)
 
+        # Create DataFrame
         df = load_data(city, month, day)
 
+        # Print stats
         time_stats(df, month, day)
         station_stats(df)
         trip_duration_stats(df)
