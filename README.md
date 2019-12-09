@@ -13,7 +13,7 @@ washington.csv
 
 
 ### Credits
-For the Bikeshare project, Udacity resources and problems were mainly utilized.
+Mainly Udacity resources were utilized.
 
 The following website was consulted for its list of string methods:
 https://www.w3schools.com/python/python_ref_string.asp
