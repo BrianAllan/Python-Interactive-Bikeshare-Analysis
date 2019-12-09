@@ -80,6 +80,8 @@ def get_filters():
         (str) month - name of the month to filter by, or "all" to apply no month filter
         (str) day - name of the day of week to filter by, or "all" to apply no day filter
     """
+
+    # print introductory information and graphic
     print('\nHello! Let\'s explore some US bikeshare data!\n')
     print('The data is provided by the bikeshare system provider Motivate for three large cities: Chicago, New York City, and Washington DC.')
     print('The data sets consist of randomly selected data for the first six months (January through June) of 2017.')
