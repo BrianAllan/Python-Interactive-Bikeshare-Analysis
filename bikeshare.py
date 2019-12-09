@@ -266,13 +266,13 @@ def trip_duration_stats(df):
     start_time = time.time()
 
     # display total travel time
-    total_travel_time = df['Trip Duration'].sum().round()
+    total_travel_time = df['Trip Duration'].sum()
     total_minutes = total_travel_time // 60
     remaining_tot_seconds = total_travel_time % 60
     print('The total bikeshare travel time was: {} seconds ({} minutes, {} seconds)'.format(total_travel_time, total_minutes, remaining_tot_seconds))
 
     # display mean travel time
-    mean_travel_time = df['Trip Duration'].mean().round()
+    mean_travel_time = df['Trip Duration'].mean()
     mean_minutes = mean_travel_time // 60
     remaining_mean_seconds = mean_travel_time % 60
     print('The mean bikeshare travel time was: {} seconds ({} minutes, {} seconds)'.format(int(mean_travel_time), int(mean_minutes), int(remaining_mean_seconds)))
