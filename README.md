@@ -3,7 +3,7 @@
 ### Bikeshare Project
 
 ### Description
-This program provides the user with options for analyzing randomly selected bikeshare data from the first six months of 2017 for the three large cities of Chicago, New York City, and Washington DC.  The data was provided by the system provider Motivate.
+This program provides the user with options for exploring randomly selected bikeshare data from the first six months of 2017 for the three large cities of Chicago, New York City, and Washington DC.  The data was provided by the system provider Motivate.
 
 ### Files used
 bikeshare.py  
