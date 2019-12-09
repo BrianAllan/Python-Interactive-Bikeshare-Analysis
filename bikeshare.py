@@ -337,6 +337,10 @@ def main():
 
         df = load_data(city, month, day)
 
+        print('*'*50)
+        print('*  Statistics for...\n*  City: {}\n*  Month: {}\n*  Day of Week: {}'.format(city.title(), month.title(), day.title()))
+        print('*'*50)
+
         time_stats(df, month, day)
         station_stats(df)
         trip_duration_stats(df)
