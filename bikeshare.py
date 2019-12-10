@@ -342,6 +342,7 @@ def main():
         # Create DataFrame
         df = load_data(city, month, day)
 
+        # Print stats 
         print('*'*50)
         print('*  Statistics for...\n*  City: {}\n*  Month: {}\n*  Day of Week: {}'.format(city.title(), month.title(), day.title()))
         print('*'*50)
