@@ -240,7 +240,7 @@ def time_stats(df, month, day):
 def station_stats(df):
     """Displays statistics on the most popular stations and trip."""
 
-    print('\nCalculating The Most Popular Stations and Trip...\n')
+    print('\nCalculating The Most Popular Stations and Most Popular Trip...\n')
     start_time = time.time()
 
     # display most commonly used start station
@@ -268,13 +268,13 @@ def trip_duration_stats(df):
     start_time = time.time()
 
     # display total travel time
-    total_travel_time = df['Trip Duration'].sum().round()
+    total_travel_time = df['Trip Duration'].sum()
     total_minutes = total_travel_time // 60
     remaining_tot_seconds = total_travel_time % 60
     print('The total bikeshare travel time was: {} seconds ({} minutes, {} seconds)'.format(total_travel_time, total_minutes, remaining_tot_seconds))
 
     # display mean travel time
-    mean_travel_time = df['Trip Duration'].mean().round()
+    mean_travel_time = df['Trip Duration'].mean()
     mean_minutes = mean_travel_time // 60
     remaining_mean_seconds = mean_travel_time % 60
     print('The mean bikeshare travel time was: {} seconds ({} minutes, {} seconds)'.format(int(mean_travel_time), int(mean_minutes), int(remaining_mean_seconds)))
@@ -342,7 +342,10 @@ def main():
         # Create DataFrame
         df = load_data(city, month, day)
 
-        # Print stats
+        print('*'*50)
+        print('*  Statistics for...\n*  City: {}\n*  Month: {}\n*  Day of Week: {}'.format(city.title(), month.title(), day.title()))
+        print('*'*50)
+
         time_stats(df, month, day)
         station_stats(df)
         trip_duration_stats(df)
