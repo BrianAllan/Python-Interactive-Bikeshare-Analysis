@@ -1,6 +1,5 @@
 import time
 import pandas as pd
-import numpy as np
 
 CITY_DATA = { 'chicago': 'chicago.csv',
               'new york city': 'new_york_city.csv',
@@ -21,6 +20,8 @@ day_dictionary =   {'1': 'monday',
                     '5': 'friday',
                     '6': 'saturday',
                     '7': 'sunday'}
+
+separator = '-'*40
 
 
 
@@ -43,7 +44,7 @@ def get_month():
         else:
             print('\nYour response was not one of the options.  Let\'s try again!\n')
 
-    print('-'*40)
+    print(separator)
     return(month)
 
 
@@ -61,12 +62,11 @@ def get_day():
         day = input('Enter the number corresponding to the desired day: \n(1) Monday, (2) Tuesday, (3) Wednesday, (4) Thursday, (5) Friday, (6) Saturday, (7) Sunday:  ').lower()
 
         if day in day_dictionary:
-            day = day_dictionary[day]
             break
         else:
             print('\nYour response was not one of the options.  Let\'s try again!\n')
 
-    print('-'*40)
+    print(separator)
     return(day)
 
 
@@ -80,8 +80,6 @@ def get_filters():
         (str) month - name of the month to filter by, or "all" to apply no month filter
         (str) day - name of the day of week to filter by, or "all" to apply no day filter
     """
-
-    # print introductory information and graphic
     print('\nHello! Let\'s explore some US bikeshare data!\n')
     print('The data is provided by the bikeshare system provider Motivate for three large cities: Chicago, New York City, and Washington DC.')
     print('The data sets consist of randomly selected data for the first six months (January through June) of 2017.')
@@ -107,7 +105,7 @@ def get_filters():
         else:
             print('\nYour response was not one of the options.  Let\'s try again!\n')
 
-    print('-'*40)
+    print(separator)
 
     # get user input for time filter -- month, day, both, or none
     while True:
@@ -159,7 +157,7 @@ def check_input(city, month, day):
             print('\nYour response was not one of the options.  Let\'s try again!\n')
 
 
-    print('-'*40)
+    print(separator)
 
     return response == 'y'
 
@@ -176,14 +174,18 @@ def load_data(city, month, day):
         df - Pandas DataFrame containing city data filtered by month and day
     """
     # load data file into a dataframe
-    df = pd.read_csv(CITY_DATA[city])
+    df = pd.read_csv(CITY_DATA[city],
+                     header=0,
+                     index_col=0)
+    
+    df = df.convert_dtypes()
 
     # convert the Start Time column to datetime
     df['Start Time'] = pd.to_datetime(df['Start Time'])
 
     # extract month and day of week from Start Time to create new columns
     df['month'] = df['Start Time'].dt.month
-    df['day_of_week'] = df['Start Time'].dt.weekday_name
+    df['day_of_week'] = (df['Start Time'].dt.dayofweek + 1).astype('string')
 
 
     # filter by month if applicable
@@ -198,7 +200,7 @@ def load_data(city, month, day):
     # filter by day of week if applicable
     if day != 'all':
         # filter by day of week to create the new dataframe
-        df = df[df['day_of_week']==day.title()]
+        df = df[df['day_of_week']==day]
 
     return df
 
@@ -214,7 +216,7 @@ def time_stats(df, month, day):
         (str) day - name of the day of week to filter by, or "all" to apply no day filter
     """
 
-    print('\nCalculating The Most Frequent Times of Travel...\n')
+    print('\nThe Most Frequent Times of Travel...\n')
     start_time = time.time()
 
     # display the most common month under the condition that all months were chosen
@@ -234,13 +236,13 @@ def time_stats(df, month, day):
 
 
     print("\nThis took %s seconds." % (time.time() - start_time))
-    print('-'*40)
+    print(separator)
 
 
 def station_stats(df):
     """Displays statistics on the most popular stations and trip."""
 
-    print('\nCalculating The Most Popular Stations and Most Popular Trip...\n')
+    print('\nThe Most Popular Stations and Trip...\n')
     start_time = time.time()
 
     # display most commonly used start station
@@ -258,20 +260,20 @@ def station_stats(df):
     print('Start: {}    End: {}'.format(popular_combo_start, popular_combo_end))
 
     print("\nThis took %s seconds." % (time.time() - start_time))
-    print('-'*40)
+    print(separator)
 
 
 def trip_duration_stats(df):
     """Displays statistics on the total and average trip duration."""
 
-    print('\nCalculating Trip Duration...\n')
+    print('\nTrip Duration...\n')
     start_time = time.time()
 
     # display total travel time
-    total_travel_time = df['Trip Duration'].sum()
+    total_travel_time = df['Trip Duration'].sum().round()
     total_minutes = total_travel_time // 60
     remaining_tot_seconds = total_travel_time % 60
-    print('The total bikeshare travel time was: {} seconds ({} minutes, {} seconds)'.format(total_travel_time, total_minutes, remaining_tot_seconds))
+    print(f"The total bikeshare travel time was: {total_travel_time:,.0f} seconds ({total_minutes:,.0f} minutes, {remaining_tot_seconds:,.0f} seconds)")
 
     # display mean travel time
     mean_travel_time = df['Trip Duration'].mean()
@@ -282,11 +284,10 @@ def trip_duration_stats(df):
     # display percentage of trips under an hour
     total_num_trips = df['Trip Duration'].count()
     trips_under_hour = df.loc[df['Trip Duration'] < 3600, 'Trip Duration'].count()
-    percentage_under_hour = trips_under_hour * 100 / total_num_trips
-    print('The percentage of trips under one hour was: {}'.format(percentage_under_hour.round()))
+    print(f"The percentage of trips under one hour was: {trips_under_hour/total_num_trips:.2%}")
 
     print("\nThis took %s seconds." % (time.time() - start_time))
-    print('-'*40)
+    print(separator)
 
 
 def user_stats(df, city):
@@ -298,7 +299,7 @@ def user_stats(df, city):
         (str) city - name of the city to analyze
     """
 
-    print('\nCalculating User Stats...\n')
+    print('\nUser Stats...\n')
     start_time = time.time()
 
     # Display counts of user types
@@ -326,52 +327,57 @@ def user_stats(df, city):
     else:
         print('\nData and statistics concerning gender and birth year are not available for Washington DC.')
 
-    print("\nThis took %s seconds." % (time.time() - start_time))
-    print('-'*40)
+    time_diff = time.time() - start_time
+    print(f"\nThis took {time_diff} seconds.")
+
+    print(separator)
+
+
+def raw_data_prompt(df):
+    """
+    Prompt user if they would like to see rows of raw data from the dataframe, 5 at a time.
+
+    Args:
+        df - Pandas dataframe
+    """
+
+    while True:
+        print('\nWould you like to see 5 lines of raw data from the dataframe your selection created?')
+        raw_data = input('Enter the letter \'y\' for Yes or \'n\' for No:  ').lower()
+        i = 0
+        if raw_data == 'y':
+            print(df.iloc[i:i+5, :])
+            print(separator)
+
+            while True:
+                raw_data = input('\nWould you like to see more raw data? Enter \'y\' for Yes or \'n\' for No:  ').lower()
+                if raw_data == 'y':
+                    i += 5
+                    print('\n', df.iloc[i:i+5, :])
+                    print(separator)
+                else:
+                    break
+            break
+        else:
+            break
+
+    print(separator)
 
 
 def main():
     while True:
-
-        # Get info for filter from user and check that info with the user
         ready = False
         while not ready:
             city, month, day = get_filters()
             ready = check_input(city, month, day)
 
-        # Create DataFrame
         df = load_data(city, month, day)
-
-        # Print stats 
-        print('*'*50)
-        print('*  Statistics for...\n*  City: {}\n*  Month: {}\n*  Day of Week: {}'.format(city.title(), month.title(), day.title()))
-        print('*'*50)
 
         time_stats(df, month, day)
         station_stats(df)
         trip_duration_stats(df)
         user_stats(df, city)
-
-        # Prompt user if they would like to see rows of raw data from the dataframe, 5 at a time.
-        while True:
-            print('\nWould you like to see 5 lines of raw data from the dataframe your selection created?')
-            raw_data = input('Enter the letter \'y\' for Yes or \'n\' for No:  ').lower()
-            i = 0
-            if raw_data == 'y':
-                print(df.iloc[i:i+5, :])
-                print('-'*40)
-
-                while True:
-                    raw_data = input('\nWould you like to see more raw data? Enter \'y\' for Yes or \'n\' for No:  ').lower()
-                    if raw_data == 'y':
-                        i += 5
-                        print('\n', df.iloc[i:i+5, :])
-                        print('-'*40)
-                    else:
-                        break
-                break
-            else:
-                break
+        raw_data_prompt(df)
 
         # Ask user if they would like to restart
         restart = input('\nWould you like to start over for a fresh analysis? Enter the letter \'y\' for Yes or \'n\' for No:  ')
